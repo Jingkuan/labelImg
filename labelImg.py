@@ -2,32 +2,22 @@
 # -*- coding: utf-8 -*-
 import argparse
 import codecs
-import distutils.spawn
 import os.path
 import platform
-import re
 import sys
-import subprocess
 import shutil
 import webbrowser as wb
 
 from functools import partial
-from collections import defaultdict
-
-try:
-    from PyQt5.QtGui import *
-    from PyQt5.QtCore import *
-    from PyQt5.QtWidgets import *
-except ImportError:
-    # needed for py3+qt4
-    # Ref:
-    # http://pyqt.sourceforge.net/Docs/PyQt4/incompatible_apis.html
-    # http://stackoverflow.com/questions/21217399/pyqt4-qtcore-qvariant-object-instead-of-a-string
-    if sys.version_info.major >= 3:
-        import sip
-        sip.setapi('QVariant', 2)
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import *
+from PyQt5.QtGui import QImage, QColor, QPixmap, QImageReader, QCursor
+from PyQt5.QtCore import Qt, QPoint, QProcess, QSize, QVariant, QFileInfo, QTimer
+from PyQt5.QtCore import QMetaType
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QWidget, QListWidget
+from PyQt5.QtWidgets import QDockWidget, QLineEdit, QVBoxLayout, QHBoxLayout, QCheckBox, QToolButton
+from PyQt5.QtWidgets import QScrollArea, QWidgetAction, QMenu, QAction, QLabel, QListWidgetItem
+from PyQt5 import sip
+if sys.version_info.major >= 3:
+    sip.setapi('QVariant', 2)
 
 from libs.combobox import ComboBox
 from libs.resources import *
@@ -471,7 +461,7 @@ class MainWindow(QMainWindow, WindowMixin):
                                          (__appname__, self.default_save_dir))
             self.statusBar().show()
 
-        self.restoreState(settings.get(SETTING_WIN_STATE, QByteArray()))
+        self.restoreState(settings.get(SETTING_WIN_STATE, QMetaType.QByteArray))
         Shape.line_color = self.line_color = QColor(settings.get(SETTING_LINE_COLOR, DEFAULT_LINE_COLOR))
         Shape.fill_color = self.fill_color = QColor(settings.get(SETTING_FILL_COLOR, DEFAULT_FILL_COLOR))
         self.canvas.set_drawing_color(self.line_color)
